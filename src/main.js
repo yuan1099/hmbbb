@@ -30,7 +30,7 @@ Vue.use(VueLazyload, {
 // 引入组件
 import index from './components/index.vue';
 import detail from './components/detail.vue';
-import shopCart from './components/shopCart.vue';
+import shopcart from './components/shopcart.vue';
 
 // 导入axios
 import axios from "axios";
@@ -56,8 +56,8 @@ const routes = [{
     component:detail
   },
   {
-    path: '/shopCart',
-    component:shopCart
+    path: '/shopcart',
+    component:shopcart
   }
 ]
 // 实例化路由对象

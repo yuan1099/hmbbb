@@ -23,7 +23,7 @@
                         <a>退出</a>
                         <strong>|</strong>
                     </span>
-                    <router-link to="/shopCart">
+                    <router-link to="/shopcart">
                     <!-- <a href="" class=""> -->
                         <i class="iconfont icon-cart"></i>购物车(
                         <span id="shoppingCartCount">

@@ -98,26 +98,7 @@
 <script>
 export default {
     // 页面名字
-    name:'shopCart',
-
-    data:function(){
-        return {
-    // 商品id
-    goodidList:
-        }
-    },
-    // 事件
-    methods:{
-
-    },
-    // 创建前
-    created:{
-   
-   
-    },
-    
-    goodidList:JSON.parse(window.localStorage.getItem('cartData'))
-
+    name:'shopcart',
 }
 </script>
 
