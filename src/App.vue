@@ -1,7 +1,7 @@
 <template>
   <div id="app">
    <!-- 首页顶部 -->
-   <div class="header">
+    <div class="header">
         <!-- 1.0 导航栏头部 -->
         <div class="head-top">
             <div class="section">
@@ -23,23 +23,26 @@
                         <a>退出</a>
                         <strong>|</strong>
                     </span>
-                    <a href="" class="">
+                    <router-link to="/shopCart">
+                    <!-- <a href="" class=""> -->
                         <i class="iconfont icon-cart"></i>购物车(
                         <span id="shoppingCartCount">
-                            <span>4</span>
-                        </span>)</a>
+                            <span>{{$store.getters.cartGoodCount}}</span>
+                        </span>)
+                        <!-- </a> -->
+                    </router-link>
                 </div>
             </div>
-        </div>
-        
-        <!-- 2.0 导航条 -->
+         </div>
+
+            <!-- 2.0 导航条 -->
         <div class="head-nav">
             <div class="section">
                 <div id="menu2" class="nav-box menuhd">
                     <ul>
                         <li class="index">
                             <!-- <a href="#" class=""> -->
-                                <router-link to="./index">
+                                <router-link to="/index">
                                 <span class="out" style="top: 0px;">首页</span>
                                 </router-link>
                             <!-- </a> -->
@@ -82,7 +85,7 @@
             </div>
         </div>
     </div>
-
+    <!-- <input type="button" value="更改数据的" @click="add"> -->
     <router-view></router-view>
     <!-- 底部 -->
   <div class="footer">
@@ -116,15 +119,66 @@
                     </div>
      </div>
   </div>
+   <BackTop :height="100" :bottom="50">
+        <div class="top">回顶部</div>
+    </BackTop>
   </div>
 </template>
 
 <script>
+// 引入jquery
+import $ from "jquery";
+
 export default {
-  name: "app"
+  name: "app",
+  mounted() {
+    $("#menu2 li a").wrapInner('<span class="out"></span>');
+    $("#menu2 li a").each(function() {
+      $('<span class="over">' + $(this).text() + "</span>").appendTo(this);
+    });
+
+    $("#menu2 li a").hover(
+      function() {
+        $(".out", this)
+          .stop()
+          .animate({ top: "48px" }, 300); // move down - hide
+        $(".over", this)
+          .stop()
+          .animate({ top: "0px" }, 300); // move down - show
+      },
+      function() {
+        $(".out", this)
+          .stop()
+          .animate({ top: "0px" }, 300); // move up - show
+        $(".over", this)
+          .stop()
+          .animate({ top: "-48px" }, 300); // move up - hide
+      }
+    );
+  }
+  //   methods: {
+  //     add() {
+  //       this.$store.commit("addCart",{
+  //           id:102,
+  //           buyCount:98
+  //       });
+  //     }
+  //   }
 };
 </script>
 
 <style>
 @import url("./assets/statics/site/css/style.css");
+.menuhd ul li a span.over {
+  background-color: yellowgreen;
+}
+
+.top {
+  padding: 10px;
+  background: rgba(0, 153, 229, 0.7);
+  border: 1px solid skyblue;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+}
 </style>
