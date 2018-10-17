@@ -57,7 +57,7 @@
                                             <div id="buyButton" class="btn-buy">
                                                 <button onclick="cartAdd(this,'/',1,'/shopping.html');" class="buy">立即购买</button>
                                                 <!-- 点击事件 -->
-                                                <button  @click="addCart"  class="add">加入购物车</button>
+                                                <button ref="toCart"  @click="addCart"  class="add">加入购物车</button>
                                             </div>
                                         </dd>
                                     </dl>
@@ -152,6 +152,7 @@
                 </div>
             </div>
         </div>
+        <img :src="imglist.length==0?'':imglist[0].original_path" ref="fiyImg" class="fiy-img" alt="">
     </div>
 </template>
 
@@ -212,7 +213,8 @@ export default {
         scroll_items: 5,
         // 选中图片的缩略图
         choosed_thumb_border_color: "#ff9f4c"
-      }
+      },
+      isFinish: true
     };
   },
   //  事件
@@ -307,11 +309,58 @@ export default {
     // },
     // 改变购物车的数据
     addCart() {
-    //  console.log(this);
-      this.$store.commit("addCart",{
-          id:this.goodId,
-          buyCount:this.buyNum
-      });
+      //    console.log(this);
+
+      // 一直点就会出现动画排队的情况，所以判断动画是否播放完毕
+      if (this.isFinish == false) return;
+      this.isFinish = false;
+      this.$$(this.$refs.toCart).addClass("disabled");
+
+      // 通过ref获取元素
+      // 加入购物车按钮
+      //   console.log(this.$refs.toCart);
+      // 获取元素在窗口中的位置
+      let startpos = this.$$(this.$refs.toCart).offset();
+      // console.log(startpos);
+      // 获取购物车的元素
+      // console.log(this.$parent.$refs.cart);
+      let targetPos = this.$$(this.$parent.$refs.cart).offset();
+      // console.log(targetPos)
+
+      // 获取元素img
+      this.$$(this.$refs.fiyImg)
+        //设置位置
+        .stop()
+        .show()
+        // 添加类名使之可以旋转
+        .addClass("animate")
+        // 显示出来
+        .css(startpos)
+        .animate(
+          {
+            left: targetPos.left,
+            top: targetPos.top
+            // 回调函数
+          },
+          1000,
+          () => {
+            // console.log('飞完了');
+            // 获取元素的图标
+            this.$$(this.$refs.fiyImg)
+              // 隐藏图片
+              .hide()
+              //   飞完了就移出类名
+              .removeClass("animate");
+            //   加购物车的数字
+            this.$store.commit("addCart", {
+              id: this.goodId,
+              buyCount: this.buyNum
+            });
+            // 设置表示变量为true，并移除类名
+            this.isFinish = true;
+            this.$$(this.$refs.toCart).removeClass("disabled");
+          }
+        );
     }
   },
   // 创建前
@@ -322,7 +371,7 @@ export default {
     // 获取评论数据
     this.getComments();
   },
-    // 当路由发生改变时做出响应
+  // 当路由发生改变时做出响应
   watch: {
     $route(to, from) {
       // 对路由变化作出响应...
@@ -348,27 +397,43 @@ export default {
 .pic-box {
   width: 395px;
 }
-.inline-zoomer-zoomer-box{
-height: 300px;
-width: 300px;
+.inline-zoomer-zoomer-box {
+  height: 300px;
+  width: 300px;
 }
-.preview-box img{
-    height: 250px;
+.preview-box img {
+  height: 250px;
 }
-.control-box{
-    height: 50px;
+.control-box {
+  height: 50px;
 }
-.control{
-    margin: 0 auto;
+.control {
+  margin: 0 auto;
 }
-.control-box >div{
-    float: left;
-    height: 50px;
+.control-box > div {
+  float: left;
+  height: 50px;
 }
-.control-box .thumb-list img{
-    width: 50px;
-    height: 100%;
-    float: left;
+.control-box .thumb-list img {
+  width: 50px;
+  height: 100%;
+  float: left;
+}
+/* 图片是一些样式 */
+.fiy-img {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+}
+.fiy-img.animate {
+  transform: rotate(360deg) scale(0.5, 0.5);
+  opacity: 0;
+  transition: transform 1s, opacity 2s;
+}
+.goods-spec .spec-box .btn-buy .add.disabled {
+  background-color: gray;
+  /* 变为禁用图标 */
+  cursor: not-allowed;
 }
 </style>
 
